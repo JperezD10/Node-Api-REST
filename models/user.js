@@ -36,7 +36,8 @@ const userSchema = Schema({
 //con esto quito el campo password y __v del objeto que se va a mostrar como respuesta json
 //tiene que ser una funcion normal porque sino no me deja usar "this"
 userSchema.methods.toJSON = function(){
-    const {__v, password, ...user} = this.toObject();
+    const {__v, password,_id, ...user} = this.toObject();
+    user.id = _id; //renombrado
     return user;
 }
 
