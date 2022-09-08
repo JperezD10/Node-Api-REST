@@ -4,12 +4,14 @@ const { check } = require('express-validator');
 const { getUser, postUser, putUser, deleteUser } = require('../controllers/user.controller');
 const { validateRole, validateEmail, validateUserId } = require('../helpers/db-validators');
 const { fieldValidator } = require('../middlewares/fieldValidator');
+const {jwtValidator} = require('../middlewares/jwtValidator');
 
 const router = Router();
 
 router.get('/', getUser);
 
 router.post('/',[
+    jwtValidator,
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Email is required').isEmail(),
     check('email').custom(validateEmail),
@@ -25,7 +27,8 @@ router.put('/:id',[
     fieldValidator
 ], putUser);
 
-router.delete('/',[
+router.delete('/:id',[
+    jwtValidator,
     check('id', 'Invalid Id').isMongoId(),
     check('id').custom(validateUserId),
 ], deleteUser);

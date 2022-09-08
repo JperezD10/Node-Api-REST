@@ -7,7 +7,7 @@ const { jwtGenerate } = require("../helpers/jwt");
 const login = async (req, resp = response) =>{
 
     try {
-        let { email, password } = req.body;
+        const { email, password } = req.body;
 
         const user = await User.findOne({email, state: true});
        
@@ -16,10 +16,10 @@ const login = async (req, resp = response) =>{
         if(!isPasswordValid){
             return resp.status(400).json({
                 ok: false,
-                msg: 'Password incorrect'
+                msg: 'Incorrect Password'
             });
         }
-        const token = await jwtGenerate(user._id);
+        const token = await jwtGenerate(user.id);
 
         resp.json({
             ok: true,
@@ -28,11 +28,10 @@ const login = async (req, resp = response) =>{
         });
     } catch (error) {
         resp.status(500).json({
-            message: error.message
+            msg: error.message,
+            ok: false
         });
     }
-        
-    
 }
 
 module.exports = {
